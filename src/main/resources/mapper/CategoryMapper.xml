@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.borrowface.blog.mapper.CategoryMapper">
+    <select id="list" resultType="Category">
+        SELECT * FROM category ORDER BY id DESC
+    </select>
+    <select id="get" parameterType="Integer" resultType="Category">
+        SELECT * FROM category where id=#{id}
+    </select>
+    <select id="count" parameterType="Integer" resultType="Integer">
+        SELECT count(*) FROM blog where cid=#{id}
+    </select>
+    <select id="countAll" resultType="Integer">
+        SELECT count(*) FROM category
+    </select>
+</mapper>

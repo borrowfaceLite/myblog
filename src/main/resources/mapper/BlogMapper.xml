@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.borrowface.blog.mapper.BlogMapper">
+    <resultMap id="blogMap" type="Blog">
+        <id column="bid" property="id"/>
+        <result column="title" property="title"/>
+        <result column="subtitle" property="subtitle"/>
+        <result column="uid" property="uid"/>
+        <result column="uploadTime" property="uploadTime"/>
+        <association property="category" javaType="Category">
+            <id column="cid" property="id"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+    
+    
+    <select id="list" resultMap="blogMap">
+          SELECT c.*, b.* , c.id 'cid', b.id 'bid' FROM blog b left join category c on c.id=b.cid ORDER BY uploadTime DESC limit #{start},5
+    </select>
+    <select id="get" parameterType="Integer" resultType="Blog">
+          SELECT c.*, b.* , c.id 'cid', b.id 'bid' FROM blog b left join category c on c.id=b.cid where b.id=#{id}
+    </select>
+    <select id="listByC" parameterType="Integer" resultMap="blogMap">
+          SELECT c.*, b.* , c.id 'cid', b.id 'bid' FROM blog b left join category c on c.id=b.cid  WHERE b.cid=#{cid} ORDER BY uploadTime DESC
+    </select>
+    <select id="count" resultType="Integer">
+          SELECT count(*) FROM blog;
+    </select>
+    <select id="getContent" parameterType="Integer" resultType="BlogContent">
+        SELECT * FROM blogcontent WHERE bid=#{id};
+    </select>
+    <insert id="addBlog" parameterType="Blog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO blog (uid,title,subtitle,cid,uploadTime) VALUES (#{uid},#{title},#{subtitle},#{category.id},#{uploadTime})
+    </insert>
+    <insert id="addBlogContent" parameterType="BlogContent">
+        INSERT INTO blogContent (content,bid) VALUES (#{content},#{bid})
+    </insert>
+</mapper>
